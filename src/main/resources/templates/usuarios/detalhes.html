@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{/base :: layout (~{::main})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Usuário</title>
+</head>
+<body>
+<main>
+    <div class="container mt-4">
+        <h2>Detalhes do Usuário</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${usuario.nome}">Nome do Usuário</h5>
+                <p class="card-text"><strong>Email:</strong> <span th:text="${usuario.email}">email@example.com</span></p>
+                <p class="card-text"><strong>CPF ou CNPJ:</strong> <span th:text="${usuario.cpfOuCnpj}">000.000.000-00</span></p>
+                <p class="card-text"><strong>Função:</strong> <span th:text="${usuario.role}">USER</span></p>
+                <a href="/usuarios/listar" class="btn btn-primary">Voltar</a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

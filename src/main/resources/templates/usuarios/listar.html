@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{/base :: layout (~{::main})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Usuários</title>
+    <!-- Adicione o CSS do Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<main>
+    <div class="container mt-4">
+        <h2>Usuários</h2>
+        <a href="/usuarios/cadastro" class="btn btn-success mb-3">Cadastrar Novo Usuário</a>
+        <table id="usuariosTable" class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF ou CNPJ</th>
+                <th>Email</th>
+                <th>Função</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="usuario : ${usuarios}">
+                <td th:text="${usuario.nome}"></td>
+                <td th:text="${usuario.cpfOuCnpj}"></td>
+                <td th:text="${usuario.email}"></td>
+                <td th:text="${usuario.role}"></td>
+                <td>
+                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm">Editar</a>
+                    <form th:action="@{/usuarios/excluir/{id}(id=${usuario.id})}" method="get" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Adicione o JS do Bootstrap e jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

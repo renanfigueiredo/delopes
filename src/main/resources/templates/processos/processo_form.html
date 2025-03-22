@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Processo</title>
+</head>
+<body>
+<div th:replace="~{layout :: body}">
+    <h2 th:text="${processo.id != null ? 'Alterar' : 'Cadastrar'} Processo"></h2>
+    <form th:action="@{/processos/salvar}" th:object="${processo}" method="post">
+        <div class="mb-3">
+            <label for="numero" class="form-label">Número:</label>
+            <input type="text" class="form-control" id="numero" th:field="*{numero}" required />
+        </div>
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição:</label>
+            <input type="text" class="form-control" id="descricao" th:field="*{descricao}" required />
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status:</label>
+            <input type="text" class="form-control" id="status" th:field="*{status}" required />
+        </div>
+        <div class="mb-3">
+            <label for="clienteCpfOuCnpj" class="form-label">CPF ou CNPJ do Cliente:</label>
+            <input type="text" class="form-control" id="clienteCpfOuCnpj" th:field="*{clienteCpfOuCnpj}" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+</div>
+</body>
+</html>
