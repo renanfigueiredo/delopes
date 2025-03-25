@@ -1,6 +1,5 @@
 package br.com.delopes.controller;
 
-import br.com.delopes.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,8 +15,7 @@ public class LoginController {
     public String login() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
-            Usuario usuario = (Usuario) authentication.getPrincipal();
-            return "redirect:/processos" + usuario.getId();
+            return "redirect:/processos";  // Redireciona para a página de processos (processos.html) se o usuário estiver autenticado.
         }
         return "login";  // Retorna a página de login (login.html) se o usuário não estiver autenticado.
     }

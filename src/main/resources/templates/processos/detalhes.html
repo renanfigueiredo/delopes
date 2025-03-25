@@ -7,7 +7,8 @@
 </head>
 <body>
 <main>
-    <div>
+    <div id="about" class="container-fluid about py-5">
+        <div class="container py-5">
         <h2>Detalhes do Processo</h2>
         <div>
             <label>Número:</label>
@@ -67,6 +68,7 @@
         </div>
         <a th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning">Editar</a>
         <a th:href="@{/processos}" class="btn btn-secondary">Voltar</a>
+    </div>
     </div>
 </main>
 </body>

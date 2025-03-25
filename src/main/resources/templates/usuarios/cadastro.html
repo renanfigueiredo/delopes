@@ -7,7 +7,8 @@
 </head>
 <body>
 <main>
-    <div>
+    <div id="about" class="container-fluid about py-5">
+        <div class="container py-5">
         <h2 th:if="${usuario.id != null}" th:text="'Alterar Usuário'"></h2>
         <h2 th:if="${usuario.id == null}" th:text="'Cadastrar Usuário'"></h2>
 
@@ -47,6 +48,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Salvar</button>
         </form>
+    </div>
     </div>
 </main>
 </body>

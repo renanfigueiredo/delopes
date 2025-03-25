@@ -1,37 +1,132 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="pt-br" th:fragment="layout (conteudo)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Jurídico</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="/lib/animate/animate.min.css"/>
+    <link href="/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #003366 !important; /* Azul marinho */
+        }
+
+        .text-primary {
+            color: #003366 !important;
+        }
+
+        .btn-primary {
+            background-color: #003366 !important;
+            border-color: #003366 !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #002244 !important;
+            border-color: #002244 !important;
+        }
+
+        .spinner-border.text-primary {
+            border-color: #003366 !important;
+            border-right-color: transparent !important;
+        }
+
+        .fas.fa-check.text-primary,
+        .fas.fa-map-marker-alt.text-primary,
+        .fas.fa-envelope.text-primary,
+        .fa.fa-phone-alt.text-primary,
+        i.text-primary {
+            color: #003366 !important;
+        }
+
+        #copyright{
+            color: #003366 !important;
+            font-weight: bolder;
+        }
+
+        /* Correção definitiva do efeito hover no menu */
+        .navbar .navbar-nav .nav-item .nav-link:hover,
+        .navbar .navbar-nav .nav-link:hover,
+        .navbar .navbar-nav .nav-link.active,
+        .navbar .navbar-nav .nav-link.show,
+        .navbar .navbar-nav .show > .nav-link,
+        .navbar-light .navbar-nav .nav-link:hover,
+        .navbar-light .navbar-nav .nav-link.active,
+        .navbar-nav .nav-link:hover::before,
+        .navbar-nav .nav-link.active::before,
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .nav-link.active::after {
+            color: #ffffff !important;
+            background-color: transparent !important;
+            border-color: #ffffff !important;
+        }
+
+        /* Regra para sobrescrever qualquer efeito de borda ou pseudo-elementos */
+        .navbar .navbar-nav .nav-link::before,
+        .navbar .navbar-nav .nav-link::after {
+            background-color: #ffffff !important;
+        }
+
+        /* Remover qualquer elemento que possa estar causando o efeito verde */
+        .navbar-nav .nav-link:hover::before,
+        .navbar-nav .nav-link.active::before {
+            opacity: 0 !important;
+        }
+
+        /* Correção da imagem do carrossel */
+        .header-carousel-item {
+            position: relative;
+            overflow: hidden;
+            max-height: 600px; /* Ajuste este valor conforme necessário */
+        }
+
+        .header-carousel-item img {
+            object-fit: cover;
+            object-position: center;
+            width: 100%;
+            height: 100%;
+            max-height: 600px; /* Mesmo valor do container */
+        }
+    </style>
+
 </head>
 <body>
-<div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">App Jurídico</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/processos">Processos</a>
-                    </li>
-                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-                        <a class="nav-link" href="/usuarios/listar">Usuários</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout" th:onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
-                    </li>
-                </ul>
+<div class="container-fluid position-relative p-0">
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0" style="background-color: #343a40 !important;">
+        <a href="/" class="navbar-brand p-0">
+            <h1 class="m-0 text-white">Delopes</h1>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" style="color: #ffffff !important;">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0">
+                <a href="/processos" class="nav-link text-white">Processos</a>
+                <a href="/usuarios/listar" class="nav-link text-white" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Usuários</a>
+                <a href="/logout" class="nav-link text-white" th:onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
             </div>
         </div>
     </nav>
+    <!-- Navbar End -->
 
     <div class="container mt-4">
         <main th:include="${conteudo}">
@@ -43,5 +138,17 @@
 <form id="logout-form" action="/logout" method="post" th:action="@{/logout}" style="display: none;">
     <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 </form>
+
+<!-- JavaScript Libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/lib/wow/wow.min.js"></script>
+<script src="/lib/easing/easing.min.js"></script>
+<script src="/lib/waypoints/waypoints.min.js"></script>
+<script src="/lib/counterup/counterup.min.js"></script>
+<script src="/lib/lightbox/js/lightbox.min.js"></script>
+<script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+<!-- Template Javascript -->
+<script src="/js/main.js"></script>
 </body>
 </html>

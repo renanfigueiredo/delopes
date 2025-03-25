@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listagem de Processos</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <main>
-    <div class="container mt-4">
+    <div id="about" class="container-fluid about py-5">
+        <div class="container py-5">
         <h2>Processos</h2>
         <div th:if="${role == 'ROLE_ADMIN'}">
             <a href="/processos/novo" class="btn btn-success mb-3">Cadastrar Novo Processo</a>
@@ -31,19 +31,16 @@
                 <td th:text="${processo.partes}"></td>
                 <td>
                     <a th:href="@{/processos/detalhes/{id}(id=${processo.id})}" class="btn btn-info btn-sm">Detalhes</a>
-                    <div th:if="${role == 'ROLE_ADMIN'}">
-                        <a th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning btn-sm">Editar</a>
-                        <form th:action="@{/processos/excluir/{id}(id=${processo.id})}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este processo?');">Excluir</button>
-                        </form>
-                    </div>
+                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning btn-sm">Editar</a>
+                    <form th:if="${role == 'ROLE_ADMIN'}" th:action="@{/processos/excluir/{id}(id=${processo.id})}" method="post" style="display:inline-block;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este processo?');">Excluir</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
+    </div>
 </main>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
