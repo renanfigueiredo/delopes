@@ -1,43 +1,51 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{/base :: layout (~{::main})}">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      lang="pt-br" th:replace="~{base :: layout(~{::section})}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listagem de Usuários</title>
+    <title>Listagem de Processos</title>
 </head>
 <body>
-<main>
-    <div id="about" class="container-fluid about py-5">
-        <div class="container py-5">
-        <h2>Usuários</h2>
-        <a href="/usuarios/cadastro" class="btn btn-success mb-3">Cadastrar Novo Usuário</a>
-        <table id="usuariosTable" class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Nome</th>
-                <th>CPF ou CNPJ</th>
-                <th>Email</th>
-                <th>Função</th>
-                <th>Ações</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="usuario : ${usuarios}">
-                <td th:text="${usuario.nome}"></td>
-                <td th:text="${usuario.cpfOuCnpj}"></td>
-                <td th:text="${usuario.email}"></td>
-                <td th:text="${usuario.role}"></td>
-                <td>
-                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm">Editar</a>
-                    <form th:action="@{/usuarios/excluir/{id}(id=${usuario.id})}" method="get" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<section>
+    <div class="container mt-4">
+        <h2 class="text-primary mb-4">Listagem de Processos</h2>
+
+        <div class="mb-3">
+            <a href="/processos/novo" class="btn btn-primary">Novo Processo</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Status</th>
+                            <th>Data de Criação</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="processo : ${processos}" th:if="${processos != null && !processos.empty}">
+                            <td th:text="${processo.numero}"></td>
+                            <td th:text="${processo.cliente?.nome}"></td>
+                            <td th:text="${processo.status}"></td>
+                            <td th:text="${#temporals.format(processo.dataCriacao, 'dd/MM/yyyy')}"></td>
+                            <td>
+                                <a th:href="@{/processos/{id}(id=${processo.id})}" class="btn btn-sm btn-info">Detalhes</a>
+                                <a th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-sm btn-warning">Editar</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${processos == null || processos.empty}">
+                            <td colspan="5" class="text-center">Nenhum processo encontrado</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
-</main>
+</section>
 </body>
 </html>
