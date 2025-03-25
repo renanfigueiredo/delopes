@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{/base :: layout (~{::main})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${processo.id != null ? 'Alterar' : 'Cadastrar'} + ' Processo'">Cadastrar Processo</title>
+</head>
+<body>
+<main>
+    <div>
+        <h2 th:if="${processo.id != null}" th:text="'Alterar Processo'"></h2>
+        <h2 th:if="${processo.id == null}" th:text="'Cadastrar Processo'"></h2>
+
+        <!-- Seção para exibir mensagens de erro -->
+        <div th:if="${erros}" class="alert alert-danger">
+            <ul>
+                <li th:each="erro : ${erros}" th:text="${erro}"></li>
+            </ul>
+        </div>
+
+        <form th:action="@{/processos/salvar}" th:object="${processo}" method="post">
+            <div th:if="${processo.id != null}">
+                <input type="hidden" th:field="*{id}" />
+            </div>
+            <div class="mb-3">
+                <label for="numero" class="form-label">Número:</label>
+                <input type="text" class="form-control" id="numero" th:field="*{numero}" required />
+            </div>
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição:</label>
+                <textarea class="form-control" id="descricao" th:field="*{descricao}"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label>
+                <input type="text" class="form-control" id="status" th:field="*{status}" />
+            </div>
+            <div class="mb-3">
+                <label for="clienteCpfOuCnpj" class="form-label">CPF ou CNPJ do Cliente:</label>
+                <input type="text" class="form-control" id="clienteCpfOuCnpj" th:field="*{clienteCpfOuCnpj}" required />
+            </div>
+            <div class="mb-3">
+                <label for="vara" class="form-label">Vara:</label>
+                <input type="text" class="form-control" id="vara" th:field="*{vara}" />
+            </div>
+            <div class="mb-3">
+                <label for="comarca" class="form-label">Comarca:</label>
+                <input type="text" class="form-control" id="comarca" th:field="*{comarca}" />
+            </div>
+            <div class="mb-3">
+                <label for="dataInicio" class="form-label">Data de Início:</label>
+                <input type="date" class="form-control" id="dataInicio" th:field="*{dataInicio}" />
+            </div>
+            <div class="mb-3">
+                <label for="dataJulgamento" class="form-label">Data de Julgamento:</label>
+                <input type="date" class="form-control" id="dataJulgamento" th:field="*{dataJulgamento}" />
+            </div>
+            <div class="mb-3">
+                <label for="tipoAcao" class="form-label">Tipo de Ação:</label>
+                <input type="text" class="form-control" id="tipoAcao" th:field="*{tipoAcao}" />
+            </div>
+            <div class="mb-3">
+                <label for="partes" class="form-label">Partes Envolvidas:</label>
+                <input type="text" class="form-control" id="partes" th:field="*{partes}" />
+            </div>
+            <div class="mb-3">
+                <label for="advogado" class="form-label">Advogado:</label>
+                <input type="text" class="form-control" id="advogado" th:field="*{advogado}" />
+            </div>
+            <div class="mb-3">
+                <label for="natureza" class="form-label">Natureza:</label>
+                <input type="text" class="form-control" id="natureza" th:field="*{natureza}" />
+            </div>
+            <div class="mb-3">
+                <label for="sentenca" class="form-label">Sentença:</label>
+                <input type="text" class="form-control" id="sentenca" th:field="*{sentenca}" />
+            </div>
+            <div class="mb-3">
+                <label for="andamentos" class="form-label">Andamentos:</label>
+                <input type="text" class="form-control" id="andamentos" th:field="*{andamentos}" />
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

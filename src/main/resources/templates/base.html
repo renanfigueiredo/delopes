@@ -20,13 +20,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
+                        <a class="nav-link" href="/processos">Processos</a>
+                    </li>
+                    <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                         <a class="nav-link" href="/usuarios/listar">Usuários</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/processos/listar">Processos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Sair</a>
+                        <a class="nav-link" href="/logout" th:onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
                     </li>
                 </ul>
             </div>
@@ -35,9 +35,13 @@
 
     <div class="container mt-4">
         <main th:include="${conteudo}">
-            Contéudo Principal
+            Conteúdo Principal
         </main>
     </div>
 </div>
+
+<form id="logout-form" action="/logout" method="post" th:action="@{/logout}" style="display: none;">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+</form>
 </body>
 </html>

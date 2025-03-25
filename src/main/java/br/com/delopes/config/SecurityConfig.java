@@ -4,8 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +12,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -28,42 +37,39 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Desativa CSRF, caso não seja necessário
-                .csrf(AbstractHttpConfigurer::disable)
-
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/**").permitAll())
-
-//                // Configuração de autorização de URLs
-//                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-//                        // Permite o acesso público à página inicial, login, cadastro e arquivos estáticos (CSS, JS, imagens)
-//                        .requestMatchers("/", "/login", "/usuarios/cadastro", "/public/**", "/css/**", "/js/**", "/img/**").permitAll()
-//                        // Usuários com ROLE_USER podem acessar URLs relacionadas a processos
-//                        .requestMatchers("/processos/**").hasRole("USER")
-//                        // Somente ADMIN pode acessar URLs relacionadas à administração
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        // Todas as outras URLs exigem autenticação
-//                        .anyRequest().authenticated()
-//                )
-
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedPage("/error")
+                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**").permitAll()
+                        .anyRequest().authenticated()
                 )
-
-                // Configuração do formulário de login
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")  // Página de login personalizada
-                        .permitAll()  // Permite acesso público à página de login
-                )
-
-                // Configuração de logout
-                .logout(LogoutConfigurer::permitAll)  // Permite logout público
-
-                // Configuração de tratamento de exceções
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler(accessDeniedHandler())
                         .authenticationEntryPoint(new Http403ForbiddenEntryPoint())
-                );
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/processos", true)
+                        .failureUrl("/login?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                )
+                .addFilterAfter(new OncePerRequestFilter() {
+                    @Override
+                    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                            throws ServletException, IOException {
+                        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+                        if (csrfToken != null) {
+                            request.setAttribute("_csrf", csrfToken);
+                        }
+                        filterChain.doFilter(request, response);
+                    }
+                }, CsrfFilter.class);
 
         return http.build();
     }
@@ -77,11 +83,11 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // Usando o BCryptPasswordEncoder
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, accessDeniedException) -> response.sendRedirect("/access-denied");
+        return (request, response, accessDeniedException) -> response.sendRedirect("/login?error=accessDenied");
     }
 }

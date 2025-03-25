@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{/base :: layout (~{::main})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Processo</title>
+</head>
+<body>
+<main>
+    <div>
+        <h2>Detalhes do Processo</h2>
+        <div>
+            <label>Número:</label>
+            <span th:text="${processo.numero}"></span>
+        </div>
+        <div>
+            <label>Descrição:</label>
+            <span th:text="${processo.descricao}"></span>
+        </div>
+        <div>
+            <label>Status:</label>
+            <span th:text="${processo.status}"></span>
+        </div>
+        <div>
+            <label>CPF ou CNPJ do Cliente:</label>
+            <span th:text="${processo.clienteCpfOuCnpj}"></span>
+        </div>
+        <div>
+            <label>Vara:</label>
+            <span th:text="${processo.vara}"></span>
+        </div>
+        <div>
+            <label>Comarca:</label>
+            <span th:text="${processo.comarca}"></span>
+        </div>
+        <div>
+            <label>Data de Início:</label>
+            <span th:text="${#dates.format(processo.dataInicio, 'dd/MM/yyyy')}"></span>
+        </div>
+        <div>
+            <label>Data de Julgamento:</label>
+            <span th:text="${#dates.format(processo.dataJulgamento, 'dd/MM/yyyy')}"></span>
+        </div>
+        <div>
+            <label>Tipo de Ação:</label>
+            <span th:text="${processo.tipoAcao}"></span>
+        </div>
+        <div>
+            <label>Partes Envolvidas:</label>
+            <span th:text="${processo.partes}"></span>
+        </div>
+        <div>
+            <label>Advogado:</label>
+            <span th:text="${processo.advogado}"></span>
+        </div>
+        <div>
+            <label>Natureza:</label>
+            <span th:text="${processo.natureza}"></span>
+        </div>
+        <div>
+            <label>Sentença:</label>
+            <span th:text="${processo.sentenca}"></span>
+        </div>
+        <div>
+            <label>Andamentos:</label>
+            <span th:text="${processo.andamentos}"></span>
+        </div>
+        <a th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning">Editar</a>
+        <a th:href="@{/processos}" class="btn btn-secondary">Voltar</a>
+    </div>
+</main>
+</body>
+</html>
