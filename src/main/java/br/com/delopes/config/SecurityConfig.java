@@ -1,26 +1,25 @@
 package br.com.delopes.config;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -40,15 +39,15 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exceptionHandling -> exceptionHandling
+                .exceptionHandling(exceptions -> exceptions
                         .accessDeniedHandler(accessDeniedHandler())
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 )
-                .formLogin(formLogin -> formLogin
+                .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/processos", true)
                         .failureUrl("/login?error=true")
@@ -58,26 +57,29 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
-                )
-                .addFilterAfter(new OncePerRequestFilter() {
-                    @Override
-                    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-                            throws ServletException, IOException {
-                        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-                        if (csrfToken != null) {
-                            request.setAttribute("_csrf", csrfToken);
-                        }
-                        filterChain.doFilter(request, response);
-                    }
-                }, CsrfFilter.class);
+                );
+
+        http.addFilterAfter(new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                    throws ServletException, IOException {
+                CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+                if (csrfToken != null) {
+                    request.setAttribute("_csrf", csrfToken);
+                }
+                filterChain.doFilter(request, response);
+            }
+        }, CsrfFilter.class);
 
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }
 
@@ -88,6 +90,7 @@ public class SecurityConfig {
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, accessDeniedException) -> response.sendRedirect("/login?error=accessDenied");
+        return (request, response, accessDeniedException) ->
+                response.sendRedirect("/login?error=accessDenied");
     }
 }
