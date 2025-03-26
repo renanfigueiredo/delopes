@@ -2,73 +2,185 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: layout(~{::section})}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Processo</title>
 </head>
 <body>
 <section>
-    <div id="about" class="container-fluid about py-5">
+    <div class="container-fluid py-5">
         <div class="container py-5">
-        <h2>Detalhes do Processo</h2>
-        <div>
-            <label>Número:</label>
-            <span th:text="${processo.numero}"></span>
+            <!-- Cabeçalho e botões de ação -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary">
+                    <i class="fas fa-balance-scale me-3"></i>Detalhes do Processo
+                </h2>
+                <div class="d-flex">
+                    <a th:href="@{/processos}" class="btn btn-outline-secondary me-2">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar
+                    </a>
+                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning me-2">
+                        <i class="fas fa-edit me-2"></i>Editar
+                    </a>
+                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/excluir/{id}(id=${processo.id})}" class="btn btn-danger"
+                       onclick="return confirm('Tem certeza que deseja excluir este processo?');">
+                        <i class="fas fa-trash-alt me-2"></i>Excluir
+                    </a>
+                </div>
+            </div>
+
+            <!-- Status e Número do Processo -->
+            <div class="card mb-4 border-0 shadow-sm animate__animated animate__fadeIn">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-gavel me-2"></i>Processo nº <span th:text="${processo.numero}"></span>
+                        </h4>
+                        <span class="badge fs-6 py-2 px-3" th:classappend="${
+                            processo.status == 'EM_ANDAMENTO' ? 'bg-info' :
+                            processo.status == 'CONCLUIDO' ? 'bg-success' :
+                            processo.status == 'ARQUIVADO' ? 'bg-secondary' :
+                            processo.status == 'SUSPENSO' ? 'bg-warning' : 'bg-danger'
+                          }">
+                            <i th:class="${
+                                processo.status == 'EM_ANDAMENTO' ? 'fas fa-sync-alt' :
+                                processo.status == 'CONCLUIDO' ? 'fas fa-check-circle' :
+                                processo.status == 'ARQUIVADO' ? 'fas fa-archive' :
+                                processo.status == 'SUSPENSO' ? 'fas fa-pause-circle' : 'fas fa-exclamation-triangle'
+                              } + ' me-2'"></i>
+                            <span th:text="${processo.status}"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Informações Básicas -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInLeft">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Informações Básicas
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-bookmark me-2 text-primary"></i>Tipo de Ação:</span>
+                                    <span class="fw-bold" th:text="${processo.tipoAcao}"></span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-calendar-alt me-2 text-primary"></i>Data de Início:</span>
+                                    <span class="fw-bold" th:text="${#dates.format(processo.dataInicio, 'dd/MM/yyyy')}"></span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-gavel me-2 text-primary"></i>Data de Julgamento:</span>
+                                    <span class="fw-bold" th:text="${processo.dataJulgamento != null ? #dates.format(processo.dataJulgamento, 'dd/MM/yyyy') : 'Não julgado'}"></span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-building me-2 text-primary"></i>Natureza:</span>
+                                    <span class="fw-bold" th:text="${processo.natureza}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações Judiciais -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInRight">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-university me-2"></i>Informações Judiciais
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-map-marker-alt me-2 text-primary"></i>Comarca:</span>
+                                    <span class="fw-bold" th:text="${processo.comarca}"></span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-university me-2 text-primary"></i>Vara:</span>
+                                    <span class="fw-bold" th:text="${processo.vara}"></span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-user-tie me-2 text-primary"></i>Advogado:</span>
+                                    <span class="fw-bold" th:text="${processo.advogado}"></span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-id-card me-2 text-primary"></i>CPF/CNPJ do Cliente:</span>
+                                    <span class="fw-bold" th:text="${processo.clienteCpfOuCnpj}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Partes Envolvidas -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInUp">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-users me-2"></i>Partes Envolvidas
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" th:each="parte : ${processo.partes}">
+                                    <i class="fas fa-user me-2 text-primary"></i>
+                                    <span th:text="${parte}"></span>
+                                </li>
+                                <li class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(processo.partes)}">
+                                    Nenhuma parte registrada
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Descrição e Sentença -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInUp">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-file-alt me-2"></i>Detalhes do Processo
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-2">Descrição</h6>
+                                <p th:text="${processo.descricao}" class="text-justify"></p>
+                            </div>
+                            <div>
+                                <h6 class="text-primary mb-2">Sentença</h6>
+                                <p th:text="${processo.sentenca ?: 'Processo não sentenciado.'}" class="text-justify"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Andamentos -->
+            <div class="card border-0 shadow-sm animate__animated animate__fadeIn">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-history me-2"></i>Histórico de Andamentos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="andamento : ${processo.andamentos}">
+                            <i class="fas fa-angle-right me-2 text-primary"></i>
+                            <span th:text="${andamento}"></span>
+                        </li>
+                        <li class="list-group-item text-center text-muted" th:if="${#lists.isEmpty(processo.andamentos)}">
+                            Nenhum andamento registrado
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div>
-            <label>Descrição:</label>
-            <span th:text="${processo.descricao}"></span>
-        </div>
-        <div>
-            <label>Status:</label>
-            <span th:text="${processo.status}"></span>
-        </div>
-        <div>
-            <label>CPF ou CNPJ do Cliente:</label>
-            <span th:text="${processo.clienteCpfOuCnpj}"></span>
-        </div>
-        <div>
-            <label>Vara:</label>
-            <span th:text="${processo.vara}"></span>
-        </div>
-        <div>
-            <label>Comarca:</label>
-            <span th:text="${processo.comarca}"></span>
-        </div>
-        <div>
-            <label>Data de Início:</label>
-            <span th:text="${#dates.format(processo.dataInicio, 'dd/MM/yyyy')}"></span>
-        </div>
-        <div>
-            <label>Data de Julgamento:</label>
-            <span th:text="${#dates.format(processo.dataJulgamento, 'dd/MM/yyyy')}"></span>
-        </div>
-        <div>
-            <label>Tipo de Ação:</label>
-            <span th:text="${processo.tipoAcao}"></span>
-        </div>
-        <div>
-            <label>Partes Envolvidas:</label>
-            <span th:text="${processo.partes}"></span>
-        </div>
-        <div>
-            <label>Advogado:</label>
-            <span th:text="${processo.advogado}"></span>
-        </div>
-        <div>
-            <label>Natureza:</label>
-            <span th:text="${processo.natureza}"></span>
-        </div>
-        <div>
-            <label>Sentença:</label>
-            <span th:text="${processo.sentenca}"></span>
-        </div>
-        <div>
-            <label>Andamentos:</label>
-            <span th:text="${processo.andamentos}"></span>
-        </div>
-        <a th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning">Editar</a>
-        <a th:href="@{/processos}" class="btn btn-secondary">Voltar</a>
-    </div>
     </div>
 </section>
 </body>

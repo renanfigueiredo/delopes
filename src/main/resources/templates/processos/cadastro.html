@@ -2,87 +2,294 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: layout(~{::section})}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${processo.id != null ? 'Alterar' : 'Cadastrar'} + ' Processo'">Cadastrar Processo</title>
+    <title>Cadastrar Processo</title>
 </head>
 <body>
 <section>
-    <div id="about" class="container-fluid about py-5">
+    <div class="container-fluid py-5">
         <div class="container py-5">
-        <h2 th:if="${processo.id != null}" th:text="'Alterar Processo'"></h2>
-        <h2 th:if="${processo.id == null}" th:text="'Cadastrar Processo'"></h2>
+            <!-- Cabeçalho -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary">
+                    <i class="fas fa-plus-circle me-3"></i>Cadastrar Novo Processo
+                </h2>
+                <div>
+                    <a th:href="@{/processos}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar
+                    </a>
+                </div>
+            </div>
 
-        <!-- Seção para exibir mensagens de erro -->
-        <div th:if="${erros}" class="alert alert-danger">
-            <ul>
-                <li th:each="erro : ${erros}" th:text="${erro}"></li>
-            </ul>
+            <form th:action="@{/processos/salvar}" th:object="${processo}" method="post" class="animate__animated animate__fadeIn">
+                <input type="hidden" th:field="*{id}">
+
+                <!-- Informações Básicas -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Informações Básicas
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="numero" class="form-label">
+                                    <i class="fas fa-hashtag me-2 text-primary"></i>Número do Processo
+                                </label>
+                                <input type="text" class="form-control" id="numero" th:field="*{numero}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tipoAcao" class="form-label">
+                                    <i class="fas fa-bookmark me-2 text-primary"></i>Tipo de Ação
+                                </label>
+                                <input type="text" class="form-control" id="tipoAcao" th:field="*{tipoAcao}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="status" class="form-label">
+                                    <i class="fas fa-tasks me-2 text-primary"></i>Status
+                                </label>
+                                <select class="form-select" id="status" th:field="*{status}" required>
+                                    <option value="">Selecione o status</option>
+                                    <option value="EM_ANDAMENTO">Em andamento</option>
+                                    <option value="CONCLUIDO">Concluído</option>
+                                    <option value="ARQUIVADO">Arquivado</option>
+                                    <option value="SUSPENSO">Suspenso</option>
+                                    <option value="CANCELADO">Cancelado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="natureza" class="form-label">
+                                    <i class="fas fa-building me-2 text-primary"></i>Natureza
+                                </label>
+                                <select class="form-select" id="natureza" th:field="*{natureza}" required>
+                                    <option value="">Selecione a natureza</option>
+                                    <option value="PÚBLICO">Público</option>
+                                    <option value="PRIVADO">Privado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="dataInicio" class="form-label">
+                                    <i class="fas fa-calendar-alt me-2 text-primary"></i>Data de Início
+                                </label>
+                                <input type="date" class="form-control" id="dataInicio" th:field="*{dataInicio}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="dataJulgamento" class="form-label">
+                                    <i class="fas fa-gavel me-2 text-primary"></i>Data de Julgamento
+                                </label>
+                                <input type="date" class="form-control" id="dataJulgamento" th:field="*{dataJulgamento}">
+                                <small class="text-muted">Deixe em branco se não houver julgamento</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações Judiciais -->
+                <div class="card border-0 shadow-sm mb-4 animate__animated animate__fadeIn animate__delay-1s">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-university me-2"></i>Informações Judiciais
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="comarca" class="form-label">
+                                    <i class="fas fa-map-marker-alt me-2 text-primary"></i>Comarca
+                                </label>
+                                <input type="text" class="form-control" id="comarca" th:field="*{comarca}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="vara" class="form-label">
+                                    <i class="fas fa-university me-2 text-primary"></i>Vara
+                                </label>
+                                <input type="text" class="form-control" id="vara" th:field="*{vara}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="advogado" class="form-label">
+                                    <i class="fas fa-user-tie me-2 text-primary"></i>Advogado Responsável
+                                </label>
+                                <input type="text" class="form-control" id="advogado" th:field="*{advogado}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="clienteCpfOuCnpj" class="form-label">
+                                    <i class="fas fa-id-card me-2 text-primary"></i>CPF/CNPJ do Cliente
+                                </label>
+                                <input type="text" class="form-control" id="clienteCpfOuCnpj" th:field="*{clienteCpfOuCnpj}" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Partes Envolvidas -->
+                <div class="card border-0 shadow-sm mb-4 animate__animated animate__fadeIn animate__delay-2s">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-users me-2"></i>Partes Envolvidas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="partesContainer">
+                            <div class="row mb-2" th:each="parte, status : *{partes}">
+                                <div class="col-11">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <input type="text" class="form-control" th:field="*{partes[__${status.index}__]}">
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="removerParte(this)">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-outline-primary" onclick="adicionarParte()">
+                                <i class="fas fa-plus-circle me-2"></i>Adicionar Parte
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalhes -->
+                <div class="card border-0 shadow-sm mb-4 animate__animated animate__fadeIn animate__delay-3s">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-file-alt me-2"></i>Detalhes do Processo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">
+                                <i class="fas fa-align-left me-2 text-primary"></i>Descrição
+                            </label>
+                            <textarea class="form-control" id="descricao" th:field="*{descricao}" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sentenca" class="form-label">
+                                <i class="fas fa-gavel me-2 text-primary"></i>Sentença
+                            </label>
+                            <textarea class="form-control" id="sentenca" th:field="*{sentenca}" rows="4"></textarea>
+                            <small class="text-muted">Deixe em branco se ainda não houver sentença</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Andamentos -->
+                <div class="card border-0 shadow-sm mb-4 animate__animated animate__fadeIn animate__delay-4s">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-history me-2"></i>Andamentos
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="andamentosContainer">
+                            <div class="row mb-2" th:each="andamento, status : *{andamentos}">
+                                <div class="col-11">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-angle-right"></i></span>
+                                        <input type="text" class="form-control" th:field="*{andamentos[__${status.index}__]}">
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="removerAndamento(this)">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-outline-primary" onclick="adicionarAndamento()">
+                                <i class="fas fa-plus-circle me-2"></i>Adicionar Andamento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="reset" class="btn btn-outline-secondary me-md-2">
+                        <i class="fas fa-undo me-2"></i>Limpar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Salvar Processo
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <form th:action="@{/processos/salvar}" th:object="${processo}" method="post">
-            <div th:if="${processo.id != null}">
-                <input type="hidden" th:field="*{id}" />
-            </div>
-            <div class="mb-3">
-                <label for="numero" class="form-label">Número:</label>
-                <input type="text" class="form-control" id="numero" th:field="*{numero}" required />
-            </div>
-            <div class="mb-3">
-                <label for="descricao" class="form-label">Descrição:</label>
-                <textarea class="form-control" id="descricao" th:field="*{descricao}"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="status" class="form-label">Status:</label>
-                <input type="text" class="form-control" id="status" th:field="*{status}" />
-            </div>
-            <div class="mb-3">
-                <label for="clienteCpfOuCnpj" class="form-label">CPF ou CNPJ do Cliente:</label>
-                <input type="text" class="form-control" id="clienteCpfOuCnpj" th:field="*{clienteCpfOuCnpj}" required />
-            </div>
-            <div class="mb-3">
-                <label for="vara" class="form-label">Vara:</label>
-                <input type="text" class="form-control" id="vara" th:field="*{vara}" />
-            </div>
-            <div class="mb-3">
-                <label for="comarca" class="form-label">Comarca:</label>
-                <input type="text" class="form-control" id="comarca" th:field="*{comarca}" />
-            </div>
-            <div class="mb-3">
-                <label for="dataInicio" class="form-label">Data de Início:</label>
-                <input type="date" class="form-control" id="dataInicio" th:field="*{dataInicio}" />
-            </div>
-            <div class="mb-3">
-                <label for="dataJulgamento" class="form-label">Data de Julgamento:</label>
-                <input type="date" class="form-control" id="dataJulgamento" th:field="*{dataJulgamento}" />
-            </div>
-            <div class="mb-3">
-                <label for="tipoAcao" class="form-label">Tipo de Ação:</label>
-                <input type="text" class="form-control" id="tipoAcao" th:field="*{tipoAcao}" />
-            </div>
-            <div class="mb-3">
-                <label for="partes" class="form-label">Partes Envolvidas:</label>
-                <input type="text" class="form-control" id="partes" th:field="*{partes}" />
-            </div>
-            <div class="mb-3">
-                <label for="advogado" class="form-label">Advogado:</label>
-                <input type="text" class="form-control" id="advogado" th:field="*{advogado}" />
-            </div>
-            <div class="mb-3">
-                <label for="natureza" class="form-label">Natureza:</label>
-                <input type="text" class="form-control" id="natureza" th:field="*{natureza}" />
-            </div>
-            <div class="mb-3">
-                <label for="sentenca" class="form-label">Sentença:</label>
-                <input type="text" class="form-control" id="sentenca" th:field="*{sentenca}" />
-            </div>
-            <div class="mb-3">
-                <label for="andamentos" class="form-label">Andamentos:</label>
-                <input type="text" class="form-control" id="andamentos" th:field="*{andamentos}" />
-            </div>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-        </form>
-    </div>
-    </div>
+    <script>
+        function adicionarParte() {
+            const container = document.getElementById('partesContainer');
+            const novoIndex = container.children.length;
+
+            const div = document.createElement('div');
+            div.className = 'row mb-2';
+            div.innerHTML = `
+                <div class="col-11">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" name="partes[${novoIndex}]" id="partes${novoIndex}">
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removerParte(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+
+            container.appendChild(div);
+        }
+
+        function removerParte(botao) {
+            const linha = botao.closest('.row');
+            linha.parentNode.removeChild(linha);
+            renomearCampos('partesContainer', 'partes');
+        }
+
+        function adicionarAndamento() {
+            const container = document.getElementById('andamentosContainer');
+            const novoIndex = container.children.length;
+
+            const div = document.createElement('div');
+            div.className = 'row mb-2';
+            div.innerHTML = `
+                <div class="col-11">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-angle-right"></i></span>
+                        <input type="text" class="form-control" name="andamentos[${novoIndex}]" id="andamentos${novoIndex}">
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removerAndamento(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+
+            container.appendChild(div);
+        }
+
+        function removerAndamento(botao) {
+            const linha = botao.closest('.row');
+            linha.parentNode.removeChild(linha);
+            renomearCampos('andamentosContainer', 'andamentos');
+        }
+
+        function renomearCampos(containerId, fieldName) {
+            const container = document.getElementById(containerId);
+            const campos = container.querySelectorAll('.row');
+
+            campos.forEach((campo, index) => {
+                const input = campo.querySelector('input');
+                input.name = `${fieldName}[${index}]`;
+                input.id = `${fieldName}${index}`;
+            });
+        }
+    </script>
 </section>
 </body>
 </html>
