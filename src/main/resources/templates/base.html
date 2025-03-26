@@ -129,7 +129,12 @@
             <div class="navbar-nav ms-auto py-0">
                 <a href="/processos" class="nav-link text-white">Processos</a>
                 <a href="/usuarios/listar" class="nav-link text-white" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Usuários</a>
-                <a href="/logout" class="nav-link text-white" th:onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
+                <form th:action="@{/logout}" method="post" class="nav-link text-white">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" style="background: none; border: none; color: #fff;">
+                        <i class="fas fa-sign-out-alt me-2"></i>Sair
+                    </button>
+                </form>
             </div>
         </div>
     </nav>
@@ -141,10 +146,6 @@
         </main>
     </div>
 </div>
-
-<form id="logout-form" action="/logout" method="post" th:action="@{/logout}" style="display: none;">
-    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-</form>
 
 <!-- JavaScript Libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
