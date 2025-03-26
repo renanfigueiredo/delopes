@@ -7,7 +7,8 @@
 </head>
 <body>
 <section>
-    <div class="container mt-4">
+    <div id="about" class="container-fluid about py-5">
+        <div class="container py-5">
         <h2 class="text-primary mb-4">Processos</h2>
         <div th:if="${role == 'ROLE_ADMIN'}" class="mb-3">
             <a href="/processos/novo" class="btn btn-primary">Cadastrar Novo Processo</a>
@@ -42,6 +43,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
 </body>

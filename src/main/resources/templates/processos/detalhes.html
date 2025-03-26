@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{/base :: layout (~{::main})}">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: layout(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Processo</title>
 </head>
 <body>
-<main>
+<section>
     <div id="about" class="container-fluid about py-5">
         <div class="container py-5">
         <h2>Detalhes do Processo</h2>
@@ -70,6 +70,6 @@
         <a th:href="@{/processos}" class="btn btn-secondary">Voltar</a>
     </div>
     </div>
-</main>
+</section>
 </body>
 </html>

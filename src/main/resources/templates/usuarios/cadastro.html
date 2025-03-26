@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{/base :: layout (~{::main})}">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{base :: layout(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${usuario.id != null ? 'Alterar' : 'Cadastrar'} + ' Usuário'">Cadastrar Usuário</title>
 </head>
 <body>
-<main>
+<section>
     <div id="about" class="container-fluid about py-5">
         <div class="container py-5">
         <h2 th:if="${usuario.id != null}" th:text="'Alterar Usuário'"></h2>
@@ -50,6 +50,6 @@
         </form>
     </div>
     </div>
-</main>
+</section>
 </body>
 </html>
