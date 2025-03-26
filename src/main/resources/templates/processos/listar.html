@@ -9,41 +9,57 @@
 <section>
     <div id="about" class="container-fluid about py-5">
         <div class="container py-5">
-        <h2 class="text-primary mb-4">Processos</h2>
-        <div th:if="${role == 'ROLE_ADMIN'}" class="mb-3">
-            <a href="/processos/novo" class="btn btn-primary">Cadastrar Novo Processo</a>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="processosTable" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Número</th>
-                            <th>Status</th>
-                            <th>CPF ou CNPJ do Cliente</th>
-                            <th>Partes Envolvidas</th>
-                            <th>Ações</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="processo : ${processos}">
-                            <td th:text="${processo.numero}"></td>
-                            <td th:text="${processo.status}"></td>
-                            <td th:text="${processo.clienteCpfOuCnpj}"></td>
-                            <td th:text="${processo.partes}"></td>
-                            <td>
-                                <a th:href="@{/processos/detalhes/{id}(id=${processo.id})}" class="btn btn-info btn-sm">Detalhes</a>
-                                <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning btn-sm">Editar</a>
-                                <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/excluir/{id}(id=${processo.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este processo?');">Excluir</a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <h2 class="text-primary mb-4">Processos</h2>
+            <div th:if="${role == 'ROLE_ADMIN'}" class="mb-3">
+                <a href="/processos/novo" class="btn btn-primary">Cadastrar Novo Processo</a>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="processosTable" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Status</th>
+                                <th>CPF ou CNPJ do Cliente</th>
+                                <th>Partes Envolvidas</th>
+                                <th>Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="processo : ${processos}">
+                                <td th:text="${processo.numero}"></td>
+                                <td th:text="${processo.status}"></td>
+                                <td th:text="${processo.clienteCpfOuCnpj}"></td>
+                                <td th:text="${processo.partes}"></td>
+                                <td>
+                                    <a th:href="@{/processos/detalhes/{id}(id=${processo.id})}" class="btn btn-info btn-sm">Detalhes</a>
+                                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/excluir/{id}(id=${processo.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este processo?');">Excluir</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <!-- jQuery primeiro, então DataTables JS -->
+            <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+            <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+            <!-- Inicialização do DataTable -->
+            <script th:inline="javascript">
+                $(document).ready(function() {
+                    $('#processosTable').DataTable({
+                        language: {
+                            url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/pt-BR.json'
+                        }
+                    });
+                });
+            </script>
         </div>
-    </div>
     </div>
 </section>
 </body>

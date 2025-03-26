@@ -9,34 +9,57 @@
 <section>
     <div id="about" class="container-fluid about py-5">
         <div class="container py-5">
-        <h2>Usuários</h2>
-        <a href="/usuarios/cadastro" class="btn btn-success mb-3">Cadastrar Novo Usuário</a>
-        <table id="usuariosTable" class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Nome</th>
-                <th>CPF ou CNPJ</th>
-                <th>Email</th>
-                <th>Função</th>
-                <th>Ações</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="usuario : ${usuarios}">
-                <td th:text="${usuario.nome}"></td>
-                <td th:text="${usuario.cpfOuCnpj}"></td>
-                <td th:text="${usuario.email}"></td>
-                <td th:text="${usuario.role}"></td>
-                <td>
-                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm">Editar</a>
-                    <form th:action="@{/usuarios/excluir/{id}(id=${usuario.id})}" method="get" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+            <h2 class="text-primary mb-4">Usuários</h2>
+            <a href="/usuarios/cadastro" class="btn btn-primary mb-3">Cadastrar Novo Usuário</a>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="usuariosTable" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CPF ou CNPJ</th>
+                                <th>Email</th>
+                                <th>Função</th>
+                                <th>Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="usuario : ${usuarios}">
+                                <td th:text="${usuario.nome}"></td>
+                                <td th:text="${usuario.cpfOuCnpj}"></td>
+                                <td th:text="${usuario.email}"></td>
+                                <td th:text="${usuario.role}"></td>
+                                <td>
+                                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a th:href="@{/usuarios/excluir/{id}(id=${usuario.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DataTables JS -->
+            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+            <!-- jQuery primeiro, então DataTables JS -->
+            <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+            <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+            <!-- Inicialização do DataTable -->
+            <script th:inline="javascript">
+                $(document).ready(function() {
+                    $('#usuariosTable').DataTable({
+                        language: {
+                            url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/pt-BR.json'
+                        }
+                    });
+                });
+            </script>
+        </div>
     </div>
 </section>
 </body>
