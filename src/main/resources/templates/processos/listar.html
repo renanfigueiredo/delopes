@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listagem de Processos</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 </head>
 <body>
 <section>
@@ -34,9 +37,15 @@
                                 <td th:text="${processo.clienteCpfOuCnpj}"></td>
                                 <td th:text="${processo.partes}"></td>
                                 <td>
-                                    <a th:href="@{/processos/detalhes/{id}(id=${processo.id})}" class="btn btn-info btn-sm">Detalhes</a>
-                                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning btn-sm">Editar</a>
-                                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/excluir/{id}(id=${processo.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este processo?');">Excluir</a>
+                                    <a th:href="@{/processos/detalhes/{id}(id=${processo.id})}" class="btn btn-info btn-sm" title="Detalhes">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/editar/{id}(id=${processo.id})}" class="btn btn-warning btn-sm" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:if="${role == 'ROLE_ADMIN'}" th:href="@{/processos/excluir/{id}(id=${processo.id})}" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este processo?');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -48,14 +57,18 @@
             <!-- jQuery primeiro, então DataTables JS -->
             <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
             <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
-            <!-- Inicialização do DataTable -->
+            <!-- Inicialização do DataTable e filtro dinâmico -->
             <script th:inline="javascript">
                 $(document).ready(function() {
-                    $('#processosTable').DataTable({
+                    var table = $('#processosTable').DataTable({
                         language: {
                             url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/pt-BR.json'
-                        }
+                        },
+                        paging: true,
+                        searching: true,
+                        info: true
                     });
                 });
             </script>

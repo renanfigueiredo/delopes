@@ -4,23 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Usuário</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
 </head>
 <body>
 <section>
-    <div id="about" class="container-fluid about py-5">
-        <div class="container py-5">
-            <h2>Detalhes do Usuário</h2>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${usuario.nome}">Nome do Usuário</h5>
-                    <p class="card-text"><strong>Email:</strong> <span th:text="${usuario.email}">email@example.com</span></p>
-                    <p class="card-text"><strong>CPF ou CNPJ:</strong> <span th:text="${usuario.cpfOuCnpj}">000.000.000-00</span></p>
-                    <p class="card-text"><strong>Função:</strong> <span th:text="${usuario.role}">USER</span></p>
-                    <a href="/usuarios/listar" class="btn btn-primary">Voltar</a>
+    <div class="container py-5">
+        <h2 class="text-primary mb-4">Detalhes do Usuário</h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-3"><strong>Nome:</strong></div>
+                    <div class="col-md-9" th:text="${usuario.nome}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3"><strong>Documento:</strong></div>
+                    <div class="col-md-9" th:text="${usuario.cpfOuCnpj}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3"><strong>Email:</strong></div>
+                    <div class="col-md-9" th:text="${usuario.email}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3"><strong>Perfil:</strong></div>
+                    <div class="col-md-9" th:text="${usuario.role}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning">Editar</a>
+                        <a th:href="@{/usuarios/listar}" class="btn btn-secondary">Voltar</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

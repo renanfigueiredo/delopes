@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +62,11 @@ public class ProcessoService {
         // Verifica se o usuário está tentando modificar um processo que não é dele
         if ("USER".equals(usuario.getRole()) && !processo.getClienteCpfOuCnpj().equals(usuario.getCpfOuCnpj())) {
             throw new RuntimeException("Usuário não autorizado a modificar este processo.");
+        }
+
+        // Gera um novo ID se estiver vazio
+        if (processo.getId() == null || processo.getId().isEmpty()) {
+            processo.setId(UUID.randomUUID().toString());
         }
 
         processoRepository.save(processo);

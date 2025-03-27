@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listagem de Usuários</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 </head>
 <body>
 <section>
     <div id="about" class="container-fluid about py-5">
         <div class="container py-5">
             <h2 class="text-primary mb-4">Usuários</h2>
-            <a href="/usuarios/cadastro" class="btn btn-primary mb-3">Cadastrar Novo Usuário</a>
+            <div th:if="${role == 'ROLE_ADMIN'}" class="mb-3">
+                <a href="/usuarios/novo" class="btn btn-primary">Cadastrar Novo Usuário</a>
+            </div>
 
             <div class="card">
                 <div class="card-body">
@@ -19,9 +24,9 @@
                             <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>CPF ou CNPJ</th>
+                                <th>Documento</th>
                                 <th>Email</th>
-                                <th>Função</th>
+                                <th>Perfil</th>
                                 <th>Ações</th>
                             </tr>
                             </thead>
@@ -32,8 +37,15 @@
                                 <td th:text="${usuario.email}"></td>
                                 <td th:text="${usuario.role}"></td>
                                 <td>
-                                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm">Editar</a>
-                                    <a th:href="@{/usuarios/excluir/{id}(id=${usuario.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</a>
+                                    <a th:href="@{/usuarios/detalhes/{id}(id=${usuario.id})}" class="btn btn-info btn-sm" title="Detalhes">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn btn-warning btn-sm" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/usuarios/excluir/{id}(id=${usuario.id})}" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -42,20 +54,21 @@
                 </div>
             </div>
 
-            <!-- DataTables JS -->
-            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-
             <!-- jQuery primeiro, então DataTables JS -->
             <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
             <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
-            <!-- Inicialização do DataTable -->
+            <!-- Inicialização do DataTable e filtro dinâmico -->
             <script th:inline="javascript">
                 $(document).ready(function() {
-                    $('#usuariosTable').DataTable({
+                    var table = $('#usuariosTable').DataTable({
                         language: {
                             url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/pt-BR.json'
-                        }
+                        },
+                        paging: true,
+                        searching: true,
+                        info: true
                     });
                 });
             </script>
